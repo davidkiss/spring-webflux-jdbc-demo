@@ -70,7 +70,7 @@ public class PgClientDbRepository implements DbRepository {
                     }
 
                     PgIterator resultSet = ar.result().iterator();
-                    while (ar.result().iterator().hasNext()) {
+                    while (resultSet.hasNext()) {
                         Tuple row = resultSet.next();
                         sink.next(new Fortune(row.getInteger(0), row.getString(1)));
                     }
