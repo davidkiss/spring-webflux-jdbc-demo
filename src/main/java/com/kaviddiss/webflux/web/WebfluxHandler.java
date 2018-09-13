@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -91,7 +92,6 @@ public class WebfluxHandler {
                 .concatWithValues(new Fortune(0, "Additional fortune added at request time."))
                 .sort(comparing(fortune -> fortune.message));
         return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(fortuneFlux.collectList(), new ParameterizedTypeReference<List<Fortune>>() {});
+                .render("fortunes", Collections.singletonMap("fortunes", fortuneFlux.collectList()));
     }
 }
