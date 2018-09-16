@@ -51,10 +51,10 @@ public class PgClientDbRepository implements DbRepository {
             pgPool.preparedQuery(sql, Tuple.of(world.randomNumber, world.id), ar -> {
                 if (ar.failed()) {
                     sink.error(ar.cause());
-                    return;
-                }
+                } else {
+                    sink.success(world);
+                }    
             });
-            sink.success(world);
         });
     }
 
