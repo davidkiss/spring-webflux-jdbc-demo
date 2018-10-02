@@ -3,21 +3,20 @@ package com.kaviddiss.webflux.repo;
 import com.kaviddiss.webflux.model.Fortune;
 import com.kaviddiss.webflux.model.World;
 import io.reactivex.Flowable;
+import lombok.extern.slf4j.Slf4j;
 import org.davidmoten.rx.jdbc.Database;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 @ConditionalOnProperty(name = "app.db-client", havingValue = "rxjdbc")
-public class RxJdbcDbRepository implements DbRepository {
-    public final Logger log = LoggerFactory.getLogger(getClass());
+public class RxJava2DbRepository implements DbRepository {
     private final Database db;
 
-    public RxJdbcDbRepository(Database db) {
+    public RxJava2DbRepository(Database db) {
         this.db = db;
     }
 

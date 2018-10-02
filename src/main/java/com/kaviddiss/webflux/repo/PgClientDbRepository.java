@@ -6,17 +6,16 @@ import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.Row;
 import io.reactiverse.pgclient.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 @ConditionalOnProperty(name = "app.db-client", havingValue = "pgclient", matchIfMissing = true)
 public class PgClientDbRepository implements DbRepository {
-    private final Logger log = LoggerFactory.getLogger(getClass());
     private final PgPool pgPool;
 
     public PgClientDbRepository(PgPool pgPool) {
