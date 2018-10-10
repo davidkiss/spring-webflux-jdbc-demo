@@ -29,7 +29,7 @@ public class RxJava2DbRepository implements DbRepository {
                 .parameters(id)
                 .get(rs -> {
                     World world = new World(rs.getInt("id"), rs.getInt("randomnumber"));
-                    log.info("New world - id: {}, randomnumber: {}", world.id, world.randomNumber);
+                    log.info("New world - {}", world);
                     return world;
                 });
 
@@ -41,7 +41,7 @@ public class RxJava2DbRepository implements DbRepository {
         String sql = "UPDATE world SET randomnumber = ? WHERE id = ?";
 
         Flowable<World> worldFlowable = db.update(sql)
-                .parameters(world.randomNumber, world.id)
+                .parameters(world.getRandomnumber(), world.getId())
                 .counts().map(cnt -> world);
         return Mono.from(worldFlowable);
     }

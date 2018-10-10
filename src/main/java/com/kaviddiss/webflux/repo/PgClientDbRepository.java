@@ -38,7 +38,7 @@ public class PgClientDbRepository implements DbRepository {
 
                     World world = new World(row.getInteger(0), row.getInteger(1));
                     sink.success(world);
-                    log.debug("New world - id: {}, randomnumber: {}", world.id, world.randomNumber);
+                    log.debug("New world - {}", world);
                 }));
     }
 
@@ -47,7 +47,7 @@ public class PgClientDbRepository implements DbRepository {
         String sql = "UPDATE world SET randomnumber = $1 WHERE id = $2";
 
         return Mono.create(sink -> {
-            pgPool.preparedQuery(sql, Tuple.of(world.randomNumber, world.id), ar -> {
+            pgPool.preparedQuery(sql, Tuple.of(world.getRandomnumber(), world.getId()), ar -> {
                 if (ar.failed()) {
                     sink.error(ar.cause());
                 } else {

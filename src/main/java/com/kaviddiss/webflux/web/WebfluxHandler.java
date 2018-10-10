@@ -66,7 +66,7 @@ public class WebfluxHandler {
         for (int i = 0; i < count; i++) {
             Mono<World> worldMono = dbRepository.getWorld(randomWorldNumber())
                     .map(world -> {
-                        world.randomNumber = randomWorldNumber();
+                        world.setRandomnumber(randomWorldNumber());
                         return world;
                     })
                     .flatMap(world -> dbRepository.updateWorld(world));
@@ -90,7 +90,7 @@ public class WebfluxHandler {
     public Mono<ServerResponse> fortunes(ServerRequest request) {
         Flux<Fortune> fortuneFlux = dbRepository.fortunes()
                 .concatWithValues(new Fortune(0, "Additional fortune added at request time."))
-                .sort(comparing(fortune -> fortune.message));
+                .sort(comparing(Fortune::getMessage));
         return ServerResponse.ok()
                 .render("fortunes", Collections.singletonMap("fortunes", fortuneFlux.collectList()));
     }

@@ -2,8 +2,8 @@ package com.kaviddiss.webflux.repo;
 
 import com.kaviddiss.webflux.model.Fortune;
 import com.kaviddiss.webflux.model.World;
-import io.r2dbc.postgresql.PostgresqlConnectionFactory;
-import io.r2dbc.spi.ConnectionFactory;
+import com.kaviddiss.webflux.repo.r2dbc.FortuneRepo;
+import com.kaviddiss.webflux.repo.r2dbc.WorldRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -14,54 +14,35 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @ConditionalOnProperty(name = "app.db-client", havingValue = "r2dbc")
 public class R2DBCDbRepository implements DbRepository {
-    private final ConnectionFactory connectionFactory;
+    private final WorldRepo worldRepo;
+    private final FortuneRepo fortuneRepo;
 
-    public R2DBCDbRepository(PostgresqlConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    public R2DBCDbRepository(WorldRepo worldRepo, FortuneRepo fortuneRepo) {
+        this.worldRepo = worldRepo;
+        this.fortuneRepo = fortuneRepo;
     }
 
     @Override
     public Mono<World> getWorld(int id) {
         log.info("getWorld({})", id);
-        String sql = "SELECT * FROM world WHERE id = ?";
 
-        return Mono
-                .from(this.connectionFactory.create())
-                .flatMap(connection -> Flux.from(
-                        connection.createStatement(sql)
-                                .bind(0, id)
-                                .execute())
-                        .flatMap(result -> result.map((row, rowMetadata) ->
-                                    new World(row.get("id", Integer.class), row.get("randomnumber", Integer.class)))
-                        )
-                        .single()
-                );
+        return worldRepo.findById(id)
+                .doOnError(e -> log.error("Failed to get world with id {}", id, e));
     }
 
     @Override
     public Mono<World> updateWorld(World world) {
-        String sql = "UPDATE world SET randomnumber = ? WHERE id = ?";
+        log.info("updateWorld({})", world);
 
-        return Mono.from(this.connectionFactory.create())
-                .flatMapMany(connection -> connection
-                        .createStatement(sql)
-                        .bind(0, world.randomNumber) //
-                        .bind(1, world.id) //
-                        .add().execute())
-                .single()
-                .map(result -> world);
+        return worldRepo.save(world)
+                .doOnError(e -> log.error("Failed to update world {}", world, e));
     }
 
     @Override
     public Flux<Fortune> fortunes() {
-        String sql = "SELECT * FROM fortune";
+        log.info("fortunes()");
 
-        return Mono
-                .from(this.connectionFactory
-                        .create())
-                .flatMapMany(connection -> Flux.from(
-                        connection.createStatement(sql).execute())
-                        .flatMap(result -> result.map((row, rowMetadata) ->
-                                new Fortune(row.get("id", Integer.class), row.get("message", String.class)))));
+        return fortuneRepo.findAll()
+                .doOnError(e -> log.error("Failed to get fortunes", e));
     }
 }

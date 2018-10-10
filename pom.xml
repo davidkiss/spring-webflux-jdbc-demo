@@ -14,15 +14,21 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.4.RELEASE</version>
+		<version>2.1.0.BUILD-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.10</java.version>
-	</properties>
+		<java.version>1.8</java.version>
+        <reactive-pg-client.version>0.10.2</reactive-pg-client.version>
+        <rxjava2-jdbc.version>0.1-RC38</rxjava2-jdbc.version>
+        <spring-data-jdbc.version>1.0.0.r2dbc-SNAPSHOT</spring-data-jdbc.version>
+        <r2dbc-postgresql.version>1.0.0.BUILD-SNAPSHOT</r2dbc-postgresql.version>
+        <lombok.version>1.18.2</lombok.version>
+        <postgresql.version>42.2.2</postgresql.version>
+    </properties>
 
 	<dependencies>
 		<dependency>
@@ -33,33 +39,47 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mustache</artifactId>
         </dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
 			<groupId>io.reactiverse</groupId>
 			<artifactId>reactive-pg-client</artifactId>
-			<version>0.10.2</version>
+			<version>${reactive-pg-client.version}</version>
 		</dependency>
+
         <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>rxjava2-jdbc</artifactId>
-            <version>0.1-RC38</version>
+            <version>${rxjava2-jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jdbc</artifactId>
+            <version>${spring-data-jdbc.version}</version>
         </dependency>
 		<dependency>
 			<groupId>io.r2dbc</groupId>
 			<artifactId>r2dbc-postgresql</artifactId>
-			<version>1.0.0.BUILD-SNAPSHOT</version>
+			<version>${r2dbc-postgresql.version}</version>
 		</dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.2</version>
+            <version>${postgresql.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.2</version>
-            <scope>provided</scope>
-        </dependency>
-
 
         <dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -73,16 +93,20 @@
 		</dependency>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>spring-snapshot</id>
-			<name>Spring Snapshot Repository</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>spring-libs-snapshot</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/libs-snapshot</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-libs-snapshot</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/libs-snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 	<build>
 		<plugins>
