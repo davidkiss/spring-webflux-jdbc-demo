@@ -22,13 +22,15 @@ public class WebfluxJdbcDemoApplication {
         return args -> {
             db.update("CREATE TABLE IF NOT EXISTS world (\n" +
                   "   id INT NOT NULL,\n" +
-                  "   randomNumber INT NOT NULL\n" +
-                  ")");
+                  "   randomnumber INT NOT NULL\n" +
+                  ")")
+            .complete().subscribe(System.out::println);
 
             db.update("CREATE TABLE IF NOT EXISTS fortune (\n" +
                   "   id INT NOT NULL,\n" +
                   "   message VARCHAR(255) NOT NULL\n" +
-                  ")");
+                  ")")
+            .complete().subscribe(System.out::println);
 
             // insert 10,000 worlds, if table is empty:
             db.select("SELECT * FROM world")

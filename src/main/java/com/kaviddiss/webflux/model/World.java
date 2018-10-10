@@ -1,19 +1,13 @@
 package com.kaviddiss.webflux.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+
+@Data
+@AllArgsConstructor
 public final class World {
-  public final int id;
-  public int randomNumber;
-
-  public World(int id, int randomNumber) {
-    this.id = id;
-    this.randomNumber = randomNumber;
-  }
-
-  @Override
-  public String toString() {
-    return "World{" +
-            "id=" + id +
-            ", randomNumber=" + randomNumber +
-            '}';
-  }
+  @Id
+  private int id;
+  private int randomnumber;
 }

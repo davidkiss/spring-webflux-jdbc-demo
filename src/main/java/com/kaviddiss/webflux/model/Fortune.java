@@ -1,19 +1,13 @@
 package com.kaviddiss.webflux.model;
 
-public final class Fortune {
-  public final int id;
-  public final String message;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
-  public Fortune(int id, String message) {
-    this.id = id;
-    this.message = message;
-  }
-
-  @Override
-  public String toString() {
-    return "Fortune{" +
-            "id=" + id +
-            ", message='" + message + '\'' +
-            '}';
-  }
+@Data
+@AllArgsConstructor
+public class Fortune {
+  @Id
+  private int id;
+  private String message;
 }

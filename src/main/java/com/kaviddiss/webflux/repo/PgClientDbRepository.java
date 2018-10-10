@@ -6,17 +6,16 @@ import io.reactiverse.pgclient.PgIterator;
 import io.reactiverse.pgclient.PgPool;
 import io.reactiverse.pgclient.Row;
 import io.reactiverse.pgclient.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 @ConditionalOnProperty(name = "app.db-client", havingValue = "pgclient", matchIfMissing = true)
 public class PgClientDbRepository implements DbRepository {
-    private final Logger log = LoggerFactory.getLogger(getClass());
     private final PgPool pgPool;
 
     public PgClientDbRepository(PgPool pgPool) {
@@ -39,7 +38,7 @@ public class PgClientDbRepository implements DbRepository {
 
                     World world = new World(row.getInteger(0), row.getInteger(1));
                     sink.success(world);
-                    log.debug("New world - id: {}, randomnumber: {}", world.id, world.randomNumber);
+                    log.debug("New world - {}", world);
                 }));
     }
 
@@ -48,7 +47,7 @@ public class PgClientDbRepository implements DbRepository {
         String sql = "UPDATE world SET randomnumber = $1 WHERE id = $2";
 
         return Mono.create(sink -> {
-            pgPool.preparedQuery(sql, Tuple.of(world.randomNumber, world.id), ar -> {
+            pgPool.preparedQuery(sql, Tuple.of(world.getRandomnumber(), world.getId()), ar -> {
                 if (ar.failed()) {
                     sink.error(ar.cause());
                 } else {
